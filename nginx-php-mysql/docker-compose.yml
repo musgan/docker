@@ -1,0 +1,30 @@
+version: '3:8'
+
+services:
+  tutorial_db_mysql:
+    container_name: "tutorial_db_mysql"
+    image: "mysql:8.0-debian"
+    volumes:
+      - "./db_mysql:/var/lib/mysql"
+    ports:
+      - 3308:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "12345"
+  
+  tutorial_php:
+    container_name: tutorial_php
+    build: 
+      context: "./php"
+      dockerfile: Dockerfile
+    image: tutorial_php:1.0.0
+    volumes:
+      - "./project:/usr/share/nginx/html"
+  
+  tutorial_server_nginx:
+    container_name: tutorial_server_nginx
+    image: "nginx:1.23.3"
+    ports:
+      - "8080:80"
+    volumes:
+      - "./project:/usr/share/nginx/html"
+      - "./nginx/conf.d:/etc/nginx/conf.d"
